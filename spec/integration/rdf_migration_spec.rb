@@ -44,4 +44,21 @@ describe "Mirating RDF terms" do
     end
 
   end
+
+  context "record with carriage returns" do
+
+    let(:file) { FedoraMigrate.source.connection.find("scholarsphere:6395wb555").datastreams["descMetadata"] }
+
+    describe "using triples" do
+      subject do
+        mover.migrate
+        mover.target
+      end
+
+      it "adds each triple to a new Fedora4 resource" do
+        expect(subject.title).to eql "Leeman et al. 2014 JGR Data"
+        expect(subject.description).to start_with "Data for: Journal: Journal of Geophysical Research: Solid Earth Article title"
+      end
+    end
+  end
 end
