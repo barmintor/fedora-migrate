@@ -26,9 +26,9 @@ module FedoraMigrate
       end
 
       def datastream_content
-        source.content
-        # maybe this?
-        # source.content.gsub(/(\\r\\n)+/,"\\r\\n")
+        parts = source.content.split("<info:fedora")
+        parts.map! {|part| part.index("\\n") ||  part.index("\\r")  ? part.gsub('\"','\\\\\\\\\\\\"') : part }
+        parts.join("<info:fedora")
       end
 
       # Scholarsphere has some ISO-8859 encoded data, which violates the NTriples spec.

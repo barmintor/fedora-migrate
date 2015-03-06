@@ -56,8 +56,9 @@ describe "Mirating RDF terms" do
       end
 
       it "adds each triple to a new Fedora4 resource" do
-        expect(subject.title).to eql "Leeman et al. 2014 JGR Data"
-        expect(subject.description).to start_with "Data for: Journal: Journal of Geophysical Research: Solid Earth Article title"
+        puts "target = #{subject.inspect}"
+        expect(subject.title.first).to eql "Leeman et al. 2014 JGR Data"
+        expect(subject.description.first).to start_with "Data for:\r\nJournal: Journal of Geophysical Research: Solid Earth\r\n\r\nArticle title"
       end
     end
   end
