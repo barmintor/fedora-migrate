@@ -4,7 +4,16 @@ module FedoraMigrate
     attr_accessor :versionable
 
     def post_initialize
-      raise FedoraMigrate::Errors::MigrationError, "You must supply a target" if target.nil?
+      raise FedoraMigrate::Errors::MigrationError, "You must supply a target" if @target.nil?
+      @key = options[:ds_key].to_s
+    end
+
+    def source
+      @source.datastreams[@key]
+    end
+
+    def target
+      @target.attached_files[@key]
     end
 
     def versionable?

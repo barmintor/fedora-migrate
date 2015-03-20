@@ -38,7 +38,32 @@ describe "Migrating an object" do
         expect(subject.characterization.ng_xml).to be_equivalent_to(fits_xml)
       end
     end
-
+    context "targets with custom file contents migrations" do
+      before do
+        class ConstantContentMover < FedoraMigrate::DatastreamMover
+          def migrate
+            target.content = "a test for constant content"
+            save
+            report # can't call super if inheriting from DatastreamMover
+          end
+        end
+      end
+      after do
+        Object.send(:remove_const, :ConstantContentMover) if defined?(ConstantContentMover)
+      end
+      let(:mover) do
+        m = FedoraMigrate::ObjectMover.new(source, ExampleModel::TransformedObject.new)
+        m.content_conversions['transform'] = ConstantContentMover
+        m
+      end
+      subject do
+        mover.migrate
+        mover.target
+      end
+      it "should perform the custom migration on non-existent source datastreams" do
+        expect(subject.transform.content).to eql("a test for constant content")
+      end
+    end
   end
 
   context "when we have to determine the model" do

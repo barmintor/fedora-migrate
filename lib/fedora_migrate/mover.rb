@@ -9,7 +9,7 @@ module FedoraMigrate
     def initialize *args
       @source = args[0]
       @target = args[1]
-      @options = args[2]
+      @options = args[2] || {}
       @report = results_report
       post_initialize
     end

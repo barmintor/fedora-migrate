@@ -7,6 +7,8 @@ module FedoraMigrate
     RDFDatastreamReport = Struct.new(:ds, :status)
     Report = Struct.new(:id, :class, :content_datastreams, :rdf_datastreams, :permissions, :dates)
 
+    attr_accessor :content_conversions
+
     def migrate
       prepare_target
       conversions.collect { |ds| convert_rdf_datastream(ds) }
@@ -18,6 +20,7 @@ module FedoraMigrate
     def post_initialize
       conversion_options
       create_target_model if target.nil?
+      self.content_conversions ||= Hash.new(FedoraMigrate::DatastreamMover)
     end
 
     def results_report
@@ -52,7 +55,8 @@ module FedoraMigrate
     def migrate_content_datastreams
       save
       target.attached_files.keys.each do |ds|
-        mover = FedoraMigrate::DatastreamMover.new(source.datastreams[ds.to_s], target.attached_files[ds.to_s], options)
+        opts = options.merge(ds_key: ds.to_s)
+        mover = content_conversions[ds.to_s].new(source, target, opts)
         report.content_datastreams << ContentDatastreamReport.new(ds, mover.migrate)
       end
     end

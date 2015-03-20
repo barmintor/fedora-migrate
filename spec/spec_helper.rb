@@ -14,7 +14,18 @@ ActiveFedora::Base.logger.level = Logger::WARN
 # HttpLogger.ignore = [/(127\.0\.0\.1|localhost):8983\/solr/]
 # HttpLogger.colorize = false
 # HttpLogger.log_headers = true
-
+class TestSource
+  def datastreams
+  end
+end
+class TestTarget
+  def attached_files
+  end
+end
+class VersionAwareTestTarget < TestTarget
+  def versionable?
+  end
+end
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

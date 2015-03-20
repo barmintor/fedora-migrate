@@ -32,5 +32,6 @@ describe FedoraMigrate::ObjectMover do
       expect(subject).to be true
     end
   end
-
+  context "with a custom file content migration" do
+  end
 end

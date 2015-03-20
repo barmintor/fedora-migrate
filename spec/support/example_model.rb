@@ -89,4 +89,7 @@ module ExampleModel
     include Hydra::Collection
   end
 
+  class TransformedObject < ActiveFedora::Base
+    contains "transform", class_name: "ActiveFedora::File"
+  end
 end
